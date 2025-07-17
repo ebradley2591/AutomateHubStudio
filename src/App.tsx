@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from 'react';
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import headerLogo from './assets/HeaderLogo.png';
 import heroLogo from './assets/HeroLogo.png';
@@ -12,6 +11,7 @@ import CustomPowerApps from './components/CustomPowerApps';
 import DataCollectionForms from './components/DataCollectionForms';
 import IncidentManagement from './components/IncidentManagement';
 import PerformanceAnalytics from './components/PerformanceAnalytics';
+import { useState, useEffect } from 'react';
 
 // Google Fonts import for Montserrat (modern geometric sans-serif)
 const fontLink = document.createElement('link');

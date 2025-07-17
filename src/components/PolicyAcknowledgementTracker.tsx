@@ -1,4 +1,3 @@
-import React from 'react';
 import policyIcon from '../assets/PolicyWebpartIcon.png';
 import { Link } from 'react-router-dom';
 

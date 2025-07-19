@@ -14,7 +14,6 @@ import PerformanceAnalytics from './components/PerformanceAnalytics';
 import Checkout from './Checkout';
 import ProductPage from './ProductPage';
 import { useState, useEffect } from 'react';
-import type { ReactNode } from 'react';
 
 // Google Fonts import for Montserrat (modern geometric sans-serif)
 const fontLink = document.createElement('link');

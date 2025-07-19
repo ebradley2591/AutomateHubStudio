@@ -810,6 +810,19 @@ function Navigation() {
                 <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-brand-gold transform scale-x-100 transition-transform duration-200"></div>
               )}
             </Link>
+            <Link 
+              to="/blog" 
+              className={`px-4 py-2 rounded-lg font-semibold transition-all duration-200 relative ${
+                isActive('/blog') 
+                  ? 'text-brand-gold bg-blue-700/50' 
+                  : 'hover:text-brand-gold hover:bg-blue-700/30'
+              }`}
+            >
+              Blog
+              {isActive('/blog') && (
+                <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-brand-gold transform scale-x-100 transition-transform duration-200"></div>
+              )}
+            </Link>
             <div className="ml-4 pl-4 border-l border-blue-600">
               <Link 
                 to="/contact" 

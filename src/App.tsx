@@ -11,7 +11,10 @@ import CustomPowerApps from './components/CustomPowerApps';
 import DataCollectionForms from './components/DataCollectionForms';
 import IncidentManagement from './components/IncidentManagement';
 import PerformanceAnalytics from './components/PerformanceAnalytics';
+import Checkout from './Checkout';
+import ProductPage from './ProductPage';
 import { useState, useEffect } from 'react';
+import type { ReactNode } from 'react';
 
 // Google Fonts import for Montserrat (modern geometric sans-serif)
 const fontLink = document.createElement('link');
@@ -268,6 +271,201 @@ function Solutions() {
           </Link>
         </div>
       </div>
+
+      {/* Ready-Made Solutions Section */}
+      <section className="mt-16">
+        <h3 className="text-2xl font-bold mb-6 text-center">Ready-Made Solutions</h3>
+        <div className="flex justify-center">
+          <div className="border rounded-lg shadow-lg w-full max-w-4xl bg-white flex flex-col items-center px-2 sm:px-6 py-8">
+            <h4 className="text-lg sm:text-xl font-bold mb-2 text-center">KPI Dashboard Webpart Licenses</h4>
+            <p className="text-gray-700 mb-6 text-center text-sm sm:text-base">
+              Choose the license tier that fits your needs. All licenses are for 1 year and include updates and support.
+            </p>
+            <div className="flex flex-row flex-nowrap w-full gap-4 sm:gap-6">
+              {[
+                {
+                  id: "prod_Si4aZYRtrWx0j4",
+                  name: "Core License",
+                  description: "Basic features",
+                  price: "$99.00/year",
+                },
+                {
+                  id: "prod_Si4bUV7p5hGFVU",
+                  name: "Professional License",
+                  description: "Full features",
+                  price: "$299.00/year",
+                },
+                {
+                  id: "prod_Si4cFzwzgt98G6",
+                  name: "Enterprise License",
+                  description: "Source code, white-label",
+                  price: "$999.00/year",
+                },
+              ].map((tier) => (
+                <div
+                  key={tier.id}
+                  className="flex-1 flex flex-col items-center border rounded p-4 sm:p-6 h-full bg-gray-50 min-w-0"
+                >
+                  <div className="font-semibold mb-1 text-center">{tier.name}</div>
+                  <div className="text-gray-600 text-sm mb-2 text-center">{tier.description}</div>
+                  <div className="text-lg sm:text-xl font-bold mb-4">{tier.price}</div>
+                  <a
+                    href={`/checkout?productId=${tier.id}`}
+                    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition mt-auto"
+                  >
+                    Buy Now
+                  </a>
+                </div>
+              ))}
+            </div>
+            {/* Feature Comparison Table */}
+            <div className="w-full mt-10 overflow-x-auto">
+              <h5 className="text-lg font-semibold mb-4 text-center">Feature Comparison</h5>
+              <table className="min-w-full border border-gray-200 rounded-lg bg-white text-sm">
+                <thead>
+                  <tr className="bg-gray-100">
+                    <th className="py-2 px-3 text-left font-bold">Feature</th>
+                    <th className="py-2 px-3 font-bold">Core</th>
+                    <th className="py-2 px-3 font-bold">Pro</th>
+                    <th className="py-2 px-3 font-bold">Enterprise</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    { feature: "Basic Charts", core: true, pro: true, ent: true },
+                    { feature: "Single List", core: true, pro: true, ent: true },
+                    { feature: "Multiple Lists", core: false, pro: true, ent: true },
+                    { feature: "Export", core: false, pro: true, ent: true },
+                    { feature: "Drill-through", core: false, pro: true, ent: true },
+                    { feature: "Advanced Branding", core: false, pro: true, ent: true },
+                    { feature: "Logo Integration", core: false, pro: true, ent: true },
+                    { feature: "Custom CSS", core: false, pro: false, ent: true },
+                    { feature: "White-label", core: false, pro: false, ent: true },
+                    { feature: "Source Code", core: false, pro: false, ent: true },
+                    { feature: "Commercial Redistribution", core: false, pro: false, ent: true },
+                    { feature: "Priority Support", core: false, pro: true, ent: true },
+                  ].map((row) => (
+                    <tr key={row.feature} className="border-t">
+                      <td className="py-2 px-3 font-medium text-gray-700">{row.feature}</td>
+                      {[row.core, row.pro, row.ent].map((val, idx) => (
+                        <td key={idx} className="py-2 px-3 text-center">
+                          {val ? (
+                            <span className="inline-block text-green-600" title="Included">
+                              <svg className="w-5 h-5 mx-auto" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                            </span>
+                          ) : (
+                            <span className="inline-block text-red-500" title="Not included">
+                              <svg className="w-5 h-5 mx-auto" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                            </span>
+                          )}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            {/* End Feature Comparison Table */}
+
+            {/* Enterprise Edition Marketing and License Terms (Accordion) - HIDDEN FOR DEPLOYMENT */}
+            {/* 
+            <div className="w-full mt-12 max-w-2xl mx-auto">
+              <h4 className="text-xl font-bold mb-2 text-green-700 flex items-center gap-2">
+                <span className="text-2xl">🟢</span> Enterprise Edition: Unlock Full Control & Flexibility
+              </h4>
+              <p className="mb-4 text-gray-800">
+                The Enterprise Edition is designed for organizations and solution providers who need maximum flexibility, customization, and business opportunity.
+              </p>
+              <ul className="list-disc pl-6 mb-6 text-gray-700">
+                <li><b>Full Source Code Access:</b> Customize, audit, or self-host the KPI Dashboard to fit your unique requirements.</li>
+                <li><b>White-label & Commercial Redistribution:</b> Remove all vendor branding and bundle the dashboard with your own solutions for your clients.</li>
+                <li><b>Priority Support:</b> Get direct access to our engineering team for fast, expert assistance.</li>
+              </ul>
+
+              <div className="rounded-lg border bg-white shadow-sm divide-y">
+                <AccordionSection title="License Terms (Summary)">
+                  <div className="grid md:grid-cols-2 gap-6 mb-2">
+                    <div>
+                      <h6 className="font-bold mb-1">Core & Professional Editions</h6>
+                      <ul className="list-disc pl-5 text-gray-700">
+                        <li>For use by the purchasing organization only.</li>
+                        <li>No right to redistribute, resell, or sublicense.</li>
+                        <li>No access to source code.</li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h6 className="font-bold mb-1">Enterprise Edition</h6>
+                      <ul className="list-disc pl-5 text-gray-700">
+                        <li>Full, non-exclusive access to the product's source code.</li>
+                        <li>Permission to modify, extend, and self-host the solution.</li>
+                        <li>Permission to remove or replace all vendor branding (white-label).</li>
+                        <li>Permission to redistribute, resell, or bundle the product as part of your own solutions, subject to:
+                          <ul className="list-disc pl-5">
+                            <li>Not marketed as a direct competitor to the original vendor.</li>
+                            <li>Your customers must comply with the terms of this license.</li>
+                          </ul>
+                        </li>
+                        <li>Support and updates are only provided to the original Enterprise licensee.</li>
+                      </ul>
+                    </div>
+                  </div>
+                </AccordionSection>
+                <AccordionSection title="Quick License Comparison">
+                  <table className="min-w-[350px] max-w-lg border border-gray-200 rounded-lg bg-white text-sm mb-2">
+                    <thead>
+                      <tr className="bg-gray-100">
+                        <th className="py-2 px-3 text-left font-bold">Feature</th>
+                        <th className="py-2 px-3 font-bold">Core/Pro</th>
+                        <th className="py-2 px-3 font-bold">Enterprise</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {[
+                        { feature: "Source Code Access", corepro: false, ent: true },
+                        { feature: "White-label/No Branding", corepro: false, ent: true },
+                        { feature: "Commercial Redistribution", corepro: false, ent: true },
+                        { feature: "Priority Support", corepro: false, ent: true },
+                      ].map((row) => (
+                        <tr key={row.feature} className="border-t">
+                          <td className="py-2 px-3 font-medium text-gray-700">{row.feature}</td>
+                          {[row.corepro, row.ent].map((val, idx) => (
+                            <td key={idx} className="py-2 px-3 text-center">
+                              {val ? (
+                                <span className="inline-block text-green-600" title="Included">
+                                  <svg className="w-5 h-5 mx-auto" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                                </span>
+                              ) : (
+                                <span className="inline-block text-red-500" title="Not included">
+                                  <svg className="w-5 h-5 mx-auto" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                                </span>
+                              )}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </AccordionSection>
+                <AccordionSection title="Enterprise License Grant (Fine Print)">
+                  <blockquote className="border-l-4 border-green-600 pl-4 italic text-gray-700 bg-green-50 py-2">
+                    The Enterprise Licensee is granted a non-exclusive, perpetual license to use, modify, and distribute the KPI Dashboard, including all source code, as part of their own solutions. Redistribution and resale are permitted, provided that the product is not marketed as a direct competitor to the original vendor. Vendor branding may be removed or replaced. Support and updates are provided only to the original licensee.
+                  </blockquote>
+                  <a
+                    href="/EULA.docx"
+                    className="inline-block bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 transition font-semibold mt-4"
+                    download
+                  >
+                    Download Full EULA
+                  </a>
+                </AccordionSection>
+              </div>
+            </div>
+            */}
+            {/* End Enterprise Edition Marketing and License Terms (Accordion) - HIDDEN FOR DEPLOYMENT */}
+          </div>
+        </div>
+      </section>
+      {/* End Ready-Made Solutions Section */}
     </section>
   );
 }
@@ -1096,16 +1294,9 @@ function Navigation() {
             >
               Blog
             </Link>
-            <Link 
-              to="/testimonials" 
-              className={`block px-4 py-3 font-semibold transition-all duration-200 rounded-lg mx-2 ${
-                isActive('/testimonials') 
-                  ? 'text-brand-gold bg-blue-700/50' 
-                  : 'hover:text-brand-gold hover:bg-blue-700/30'
-              }`}
-            >
+            {/* <Link to="/testimonials" className={`text-brand-dark hover:text-brand-gold transition-colors duration-200 ${isActive('/testimonials') ? 'text-brand-gold font-semibold' : ''}`}>
               Testimonials
-            </Link>
+            </Link> */}
             <div className="px-4 pt-2">
               <Link 
                 to="/contact" 
@@ -1120,6 +1311,29 @@ function Navigation() {
     </nav>
   );
 }
+
+// AccordionSection component for collapsible sections
+interface AccordionSectionProps {
+  title: string;
+  children: ReactNode;
+  defaultOpen?: boolean;
+}
+const AccordionSection = ({ title, children, defaultOpen = false }: AccordionSectionProps) => {
+  const [open, setOpen] = useState(defaultOpen);
+  return (
+    <div className="border-b last:border-b-0">
+      <button
+        className="w-full flex justify-between items-center py-3 px-2 font-semibold text-left text-green-700 hover:bg-green-50 transition"
+        onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
+      >
+        <span>{title}</span>
+        <span className="ml-2">{open ? "▲" : "▼"}</span>
+      </button>
+      {open && <div className="px-4 pb-4">{children}</div>}
+    </div>
+  );
+};
 
 function App() {
   return (
@@ -1140,9 +1354,10 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/blog" element={<Blog />} />
-          <Route path="/testimonials" element={<Testimonials />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/tos" element={<TOS />} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/products" element={<ProductPage />} />
         </Routes>
       </main>
 

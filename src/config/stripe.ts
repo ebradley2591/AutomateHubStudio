@@ -11,7 +11,7 @@ export const products = [
     price: 60000, // $600 in cents
     priceDisplay: "$600 one-time",
     file_key: "policy-acknowledgement-tracker-v1.zip",
-    stripePriceId: "price_1Rr3xAGPWIddTmC8ofgGrzuR", // Test price ID for live testing
+    stripePriceId: "price_1Rr7a4GPWIddTmC8BLnyJhs6", // Updated price ID
   },
   {
     id: "prod_SlpryMMVe02QJv",

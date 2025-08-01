@@ -15,8 +15,7 @@ import Checkout from './Checkout';
 import ProductPage from './ProductPage';
 import ThankYouPage from './ThankYouPage';
 import { useState, useEffect } from 'react';
-import type { ReactNode } from 'react';
-import { handleCheckout } from './services/stripeService';
+
 
 // Google Fonts import for Montserrat (modern geometric sans-serif)
 const fontLink = document.createElement('link');
@@ -70,24 +69,6 @@ function Home() {
 }
 
 function Solutions() {
-  const [loading, setLoading] = useState<string | null>(null);
-
-  const handleBuyNow = async (productId: string) => {
-    setLoading(productId);
-    
-    try {
-                      await handleCheckout({
-                  productId,
-                  successUrl: `${window.location.origin}/thank-you?session_id={CHECKOUT_SESSION_ID}`,
-                  cancelUrl: `${window.location.origin}/solutions`,
-                });
-    } catch (error) {
-      console.error('Checkout error:', error);
-      alert('There was an error processing your payment. Please try again.');
-    } finally {
-      setLoading(null);
-    }
-  };
 
   return (
     <section className="max-w-6xl mx-auto py-16 px-4">
@@ -816,28 +797,7 @@ function Navigation() {
   );
 }
 
-// AccordionSection component for collapsible sections
-interface AccordionSectionProps {
-  title: string;
-  children: ReactNode;
-  defaultOpen?: boolean;
-}
-const AccordionSection = ({ title, children, defaultOpen = false }: AccordionSectionProps) => {
-  const [open, setOpen] = useState(defaultOpen);
-  return (
-    <div className="border-b last:border-b-0">
-      <button
-        className="w-full flex justify-between items-center py-3 px-2 font-semibold text-left text-green-700 hover:bg-green-50 transition"
-        onClick={() => setOpen((o) => !o)}
-        aria-expanded={open}
-      >
-        <span>{title}</span>
-        <span className="ml-2">{open ? "▲" : "▼"}</span>
-      </button>
-      {open && <div className="px-4 pb-4">{children}</div>}
-    </div>
-  );
-};
+
 
 function App() {
   return (

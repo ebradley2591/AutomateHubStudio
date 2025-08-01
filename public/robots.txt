@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://automatehubstudio.com/sitemap.xml 

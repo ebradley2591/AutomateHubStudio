@@ -1,26 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
-
-const products = [
-  {
-    id: "prod_Si4aZYRtrWx0j4",
-    name: "Core Edition",
-    description: "Essential features for small teams.",
-    price: "$99/year",
-  },
-  {
-    id: "prod_Si4bUV7p5hGFVU",
-    name: "Professional Edition",
-    description: "Advanced features for growing businesses.",
-    price: "$299/year",
-  },
-  {
-    id: "prod_Si4cFzwzgt98G6",
-    name: "Enterprise Edition",
-    description: "All features, premium support, and custom integrations.",
-    price: "$999/year",
-  },
-];
+import { handleCheckout } from "./services/stripeService";
+import { products, getProductById } from "./config/stripe";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -33,9 +14,28 @@ const Checkout: React.FC = () => {
     ? products.filter((p) => p.id === selectedProductId)
     : products;
 
+  const [loading, setLoading] = useState<string | null>(null);
+
   const handleBuyNow = async (productId: string) => {
-    // TODO: Wire up to your Cloudflare Worker endpoint
-    alert(`Would start checkout for product: ${productId}`);
+    setLoading(productId);
+    
+    try {
+      const product = getProductById(productId);
+      if (!product) {
+        throw new Error('Product not found');
+      }
+
+      await handleCheckout({
+        productId,
+        successUrl: `${window.location.origin}/thank-you?session_id={CHECKOUT_SESSION_ID}`,
+        cancelUrl: `${window.location.origin}/checkout?productId=${productId}`,
+      });
+    } catch (error) {
+      console.error('Checkout error:', error);
+      alert('There was an error processing your payment. Please try again.');
+    } finally {
+      setLoading(null);
+    }
   };
 
   return (
@@ -46,12 +46,17 @@ const Checkout: React.FC = () => {
           <div key={product.id} className="border rounded-lg p-6 shadow">
             <h2 className="text-xl font-semibold">{product.name}</h2>
             <p className="text-gray-600 mb-2">{product.description}</p>
-            <div className="text-2xl font-bold mb-4">{product.price}</div>
+            <div className="text-2xl font-bold mb-4">{product.priceDisplay}</div>
             <button
-              className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition"
+              className={`px-6 py-2 rounded transition ${
+                loading === product.id
+                  ? 'bg-gray-400 cursor-not-allowed'
+                  : 'bg-blue-600 hover:bg-blue-700 text-white'
+              }`}
               onClick={() => handleBuyNow(product.id)}
+              disabled={loading === product.id}
             >
-              Buy Now
+              {loading === product.id ? 'Processing...' : 'Buy Now'}
             </button>
           </div>
         ))}

@@ -13,7 +13,10 @@ import IncidentManagement from './components/IncidentManagement';
 import PerformanceAnalytics from './components/PerformanceAnalytics';
 import Checkout from './Checkout';
 import ProductPage from './ProductPage';
+import ThankYouPage from './ThankYouPage';
 import { useState, useEffect } from 'react';
+import type { ReactNode } from 'react';
+import { handleCheckout } from './services/stripeService';
 
 // Google Fonts import for Montserrat (modern geometric sans-serif)
 const fontLink = document.createElement('link');
@@ -67,6 +70,25 @@ function Home() {
 }
 
 function Solutions() {
+  const [loading, setLoading] = useState<string | null>(null);
+
+  const handleBuyNow = async (productId: string) => {
+    setLoading(productId);
+    
+    try {
+                      await handleCheckout({
+                  productId,
+                  successUrl: `${window.location.origin}/thank-you?session_id={CHECKOUT_SESSION_ID}`,
+                  cancelUrl: `${window.location.origin}/solutions`,
+                });
+    } catch (error) {
+      console.error('Checkout error:', error);
+      alert('There was an error processing your payment. Please try again.');
+    } finally {
+      setLoading(null);
+    }
+  };
+
   return (
     <section className="max-w-6xl mx-auto py-16 px-4">
       <h2 className="text-3xl md:text-4xl font-bold mb-8 text-brand-dark text-center">Our Solutions</h2>
@@ -81,19 +103,19 @@ function Solutions() {
 
       {/* Featured Solution */}
       <div className="mb-16">
-        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-8 rounded-2xl border border-blue-100">
-          <div className="grid lg:grid-cols-2 gap-8 items-center">
-            <div>
-              <div className="flex items-center mb-4">
-                <img src={policyIcon} alt="Policy Acknowledgement Tracker Icon" className="w-12 h-12 mr-4 object-contain" />
-                <h3 className="text-2xl font-bold text-brand-dark">Policy Acknowledgement Tracker</h3>
+        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 sm:p-8 rounded-2xl border border-blue-100">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-center">
+      <div>
+              <div className="flex flex-col sm:flex-row items-center sm:items-start mb-4">
+                <img src={policyIcon} alt="Policy Acknowledgement Tracker Icon" className="w-12 h-12 mr-0 sm:mr-4 mb-2 sm:mb-0 object-contain" />
+                <h3 className="text-xl sm:text-2xl font-bold text-brand-dark text-center sm:text-left">Policy Acknowledgement Tracker</h3>
               </div>
-              <p className="text-gray-700 mb-6 leading-relaxed text-lg">
-                Streamline compliance management with our comprehensive policy tracking solution. 
-                Automate acknowledgements, track completion rates, and ensure regulatory compliance 
-                across your entire organization.
+              <p className="text-gray-700 mb-6 leading-relaxed text-base sm:text-lg text-center sm:text-left">
+                Streamline compliance management with our SharePoint-integrated policy tracking solution. 
+                Track acknowledgements in real-time, maintain comprehensive audit trails, and ensure 
+                regulatory compliance across your organization.
               </p>
-              <div className="grid grid-cols-2 gap-4 mb-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
                 <div className="flex items-center space-x-2">
                   <svg className="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
@@ -104,23 +126,23 @@ function Solutions() {
                   <svg className="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
-                  <span className="text-sm text-gray-600">Teams Notifications</span>
+                  <span className="text-sm text-gray-600">Real-time Tracking</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <svg className="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
-                  <span className="text-sm text-gray-600">Automated Reminders</span>
+                  <span className="text-sm text-gray-600">Audit Trails</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <svg className="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                  <svg className="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
-                  <span className="text-sm text-gray-600">Compliance Reporting</span>
+                  <span className="text-sm text-gray-600">Enterprise: Teams & Reports</span>
                 </div>
               </div>
-              <Link to="/contact" className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-brand-blue to-blue-600 text-white font-semibold rounded-lg hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
-                Request a Demo
+              <Link to="/solutions/policy-acknowledgement-tracker" className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-brand-blue to-blue-600 text-white font-semibold rounded-lg hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
+                Learn More
                 <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
@@ -130,24 +152,24 @@ function Solutions() {
               <h4 className="font-bold text-brand-dark mb-4">Key Features</h4>
               <ul className="space-y-3">
                 <li className="flex items-start space-x-3">
-                  <div className="w-2 h-2 bg-brand-gold rounded-full mt-2 flex-shrink-0"></div>
-                  <span className="text-gray-700">Centralized policy management dashboard</span>
+                  <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+                  <span className="text-gray-700">Centralized policy management dashboard (Standard)</span>
                 </li>
                 <li className="flex items-start space-x-3">
-                  <div className="w-2 h-2 bg-brand-gold rounded-full mt-2 flex-shrink-0"></div>
-                  <span className="text-gray-700">Automated email and Teams notifications</span>
+                  <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+                  <span className="text-gray-700">Real-time completion tracking (Standard)</span>
                 </li>
                 <li className="flex items-start space-x-3">
-                  <div className="w-2 h-2 bg-brand-gold rounded-full mt-2 flex-shrink-0"></div>
-                  <span className="text-gray-700">Real-time completion tracking</span>
+                  <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+                  <span className="text-gray-700">Comprehensive audit trails (Standard)</span>
                 </li>
                 <li className="flex items-start space-x-3">
-                  <div className="w-2 h-2 bg-brand-gold rounded-full mt-2 flex-shrink-0"></div>
-                  <span className="text-gray-700">Customizable approval workflows</span>
+                  <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                  <span className="text-gray-500">Teams notifications (Enterprise)</span>
                 </li>
                 <li className="flex items-start space-x-3">
-                  <div className="w-2 h-2 bg-brand-gold rounded-full mt-2 flex-shrink-0"></div>
-                  <span className="text-gray-700">Comprehensive audit trails</span>
+                  <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                  <span className="text-gray-500">Compliance reporting (Enterprise)</span>
                 </li>
               </ul>
             </div>
@@ -156,15 +178,15 @@ function Solutions() {
       </div>
 
       {/* All Solutions Grid */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <div className="group bg-white p-8 rounded-xl shadow-lg border border-gray-100 hover:shadow-xl transform hover:-translate-y-2 transition-all duration-300">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+        <div className="group bg-white p-6 sm:p-8 rounded-xl shadow-lg border border-gray-100 hover:shadow-xl transform hover:-translate-y-2 transition-all duration-300">
           <div className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
             <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <h3 className="text-xl font-semibold mb-3 text-brand-dark">Training Management System</h3>
-          <p className="text-gray-700 mb-4 leading-relaxed">Track employee training completion, certifications, and skill development with automated reminders and progress reporting.</p>
+          <h3 className="text-lg sm:text-xl font-semibold mb-3 text-brand-dark">Training Management System</h3>
+          <p className="text-gray-700 mb-4 leading-relaxed text-sm sm:text-base">Track employee training completion, certifications, and skill development with automated reminders and progress reporting.</p>
           <Link to="/solutions/training-management-system" className="inline-flex items-center text-brand-blue font-medium hover:text-brand-gold transition-all duration-200 group-hover:translate-x-1">
             Learn More
             <svg className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -173,14 +195,14 @@ function Solutions() {
           </Link>
         </div>
 
-        <div className="group bg-white p-8 rounded-xl shadow-lg border border-gray-100 hover:shadow-xl transform hover:-translate-y-2 transition-all duration-300">
+        <div className="group bg-white p-6 sm:p-8 rounded-xl shadow-lg border border-gray-100 hover:shadow-xl transform hover:-translate-y-2 transition-all duration-300">
           <div className="w-16 h-16 bg-green-100 rounded-lg flex items-center justify-center mb-4">
             <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
           </div>
-          <h3 className="text-xl font-semibold mb-3 text-brand-dark">Approval Workflow Automation</h3>
-          <p className="text-gray-700 mb-4 leading-relaxed">Streamline approval processes for expenses, requests, and documents with customizable workflows and notifications.</p>
+          <h3 className="text-lg sm:text-xl font-semibold mb-3 text-brand-dark">Approval Workflow Automation</h3>
+          <p className="text-gray-700 mb-4 leading-relaxed text-sm sm:text-base">Streamline approval processes for expenses, requests, and documents with customizable workflows and notifications.</p>
           <Link to="/solutions/approval-workflow-automation" className="inline-flex items-center text-brand-blue font-medium hover:text-brand-gold transition-all duration-200 group-hover:translate-x-1">
             Learn More
             <svg className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -189,14 +211,14 @@ function Solutions() {
           </Link>
         </div>
 
-        <div className="group bg-white p-8 rounded-xl shadow-lg border border-gray-100 hover:shadow-xl transform hover:-translate-y-2 transition-all duration-300">
+        <div className="group bg-white p-6 sm:p-8 rounded-xl shadow-lg border border-gray-100 hover:shadow-xl transform hover:-translate-y-2 transition-all duration-300">
           <div className="w-16 h-16 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
             <svg className="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
             </svg>
           </div>
-          <h3 className="text-xl font-semibold mb-3 text-brand-dark">Custom Power Apps</h3>
-          <p className="text-gray-700 mb-4 leading-relaxed">Build powerful business applications without coding using Microsoft Power Platform and SharePoint integration.</p>
+          <h3 className="text-lg sm:text-xl font-semibold mb-3 text-brand-dark">Custom Power Apps</h3>
+          <p className="text-gray-700 mb-4 leading-relaxed text-sm sm:text-base">Build powerful business applications without coding using Microsoft Power Platform and SharePoint integration.</p>
           <Link to="/solutions/custom-power-apps" className="inline-flex items-center text-brand-blue font-medium hover:text-brand-gold transition-all duration-200 group-hover:translate-x-1">
             Learn More
             <svg className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -205,14 +227,14 @@ function Solutions() {
           </Link>
         </div>
 
-        <div className="group bg-white p-8 rounded-xl shadow-lg border border-gray-100 hover:shadow-xl transform hover:-translate-y-2 transition-all duration-300">
+        <div className="group bg-white p-6 sm:p-8 rounded-xl shadow-lg border border-gray-100 hover:shadow-xl transform hover:-translate-y-2 transition-all duration-300">
           <div className="w-16 h-16 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
             <svg className="w-8 h-8 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
             </svg>
           </div>
-          <h3 className="text-xl font-semibold mb-3 text-brand-dark">Data Collection & Forms</h3>
-          <p className="text-gray-700 mb-4 leading-relaxed">Create intelligent forms for data collection with validation, conditional logic, and automated processing workflows.</p>
+          <h3 className="text-lg sm:text-xl font-semibold mb-3 text-brand-dark">Data Collection & Forms</h3>
+          <p className="text-gray-700 mb-4 leading-relaxed text-sm sm:text-base">Create intelligent forms for data collection with validation, conditional logic, and automated processing workflows.</p>
           <Link to="/solutions/data-collection-forms" className="inline-flex items-center text-brand-blue font-medium hover:text-brand-gold transition-all duration-200 group-hover:translate-x-1">
             Learn More
             <svg className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -221,14 +243,14 @@ function Solutions() {
           </Link>
         </div>
 
-        <div className="group bg-white p-8 rounded-xl shadow-lg border border-gray-100 hover:shadow-xl transform hover:-translate-y-2 transition-all duration-300">
+        <div className="group bg-white p-6 sm:p-8 rounded-xl shadow-lg border border-gray-100 hover:shadow-xl transform hover:-translate-y-2 transition-all duration-300">
           <div className="w-16 h-16 bg-red-100 rounded-lg flex items-center justify-center mb-4">
             <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
             </svg>
           </div>
-          <h3 className="text-xl font-semibold mb-3 text-brand-dark">Incident Management</h3>
-          <p className="text-gray-700 mb-4 leading-relaxed">Track and manage incidents, issues, and support requests with automated escalation and resolution workflows.</p>
+          <h3 className="text-lg sm:text-xl font-semibold mb-3 text-brand-dark">Incident Management</h3>
+          <p className="text-gray-700 mb-4 leading-relaxed text-sm sm:text-base">Track and manage incidents, issues, and support requests with automated escalation and resolution workflows.</p>
           <Link to="/solutions/incident-management" className="inline-flex items-center text-brand-blue font-medium hover:text-brand-gold transition-all duration-200 group-hover:translate-x-1">
             Learn More
             <svg className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -237,14 +259,14 @@ function Solutions() {
           </Link>
         </div>
 
-        <div className="group bg-white p-8 rounded-xl shadow-lg border border-gray-100 hover:shadow-xl transform hover:-translate-y-2 transition-all duration-300">
+        <div className="group bg-white p-6 sm:p-8 rounded-xl shadow-lg border border-gray-100 hover:shadow-xl transform hover:-translate-y-2 transition-all duration-300">
           <div className="w-16 h-16 bg-teal-100 rounded-lg flex items-center justify-center mb-4">
             <svg className="w-8 h-8 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
             </svg>
           </div>
-          <h3 className="text-xl font-semibold mb-3 text-brand-dark">Performance Analytics</h3>
-          <p className="text-gray-700 mb-4 leading-relaxed">Monitor and analyze business processes with real-time dashboards, KPIs, and automated reporting.</p>
+          <h3 className="text-lg sm:text-xl font-semibold mb-3 text-brand-dark">Performance Analytics</h3>
+          <p className="text-gray-700 mb-4 leading-relaxed text-sm sm:text-base">Monitor and analyze business processes with real-time dashboards, KPIs, and automated reporting.</p>
           <Link to="/solutions/performance-analytics" className="inline-flex items-center text-brand-blue font-medium hover:text-brand-gold transition-all duration-200 group-hover:translate-x-1">
             Learn More
             <svg className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -271,104 +293,7 @@ function Solutions() {
         </div>
       </div>
 
-      {/* Ready-Made Solutions Section - HIDDEN FOR DEPLOYMENT */}
-      {false && (
-        <section className="mt-16">
-          <h3 className="text-2xl font-bold mb-6 text-center">Ready-Made Solutions</h3>
-          <div className="flex justify-center">
-            <div className="border rounded-lg shadow-lg w-full max-w-4xl bg-white flex flex-col items-center px-2 sm:px-6 py-8">
-              <h4 className="text-lg sm:text-xl font-bold mb-2 text-center">KPI Dashboard Webpart Licenses</h4>
-              <p className="text-gray-700 mb-6 text-center text-sm sm:text-base">
-                Choose the license tier that fits your needs. All licenses are for 1 year and include updates and support.
-              </p>
-              <div className="flex flex-row flex-nowrap w-full gap-4 sm:gap-6">
-                {[
-                  {
-                    id: "prod_Si4aZYRtrWx0j4",
-                    name: "Core License",
-                    description: "Basic features",
-                    price: "$99.00/year",
-                  },
-                  {
-                    id: "prod_Si4bUV7p5hGFVU",
-                    name: "Professional License",
-                    description: "Full features",
-                    price: "$299.00/year",
-                  },
-                  {
-                    id: "prod_Si4cFzwzgt98G6",
-                    name: "Enterprise License",
-                    description: "Source code, white-label",
-                    price: "$999.00/year",
-                  },
-                ].map((tier) => (
-                  <div
-                    key={tier.id}
-                    className="flex-1 flex flex-col items-center border rounded p-4 sm:p-6 h-full bg-gray-50 min-w-0"
-                  >
-                    <div className="font-semibold mb-1 text-center">{tier.name}</div>
-                    <div className="text-gray-600 text-sm mb-2 text-center">{tier.description}</div>
-                    <div className="text-lg sm:text-xl font-bold mb-4">{tier.price}</div>
-                    <a
-                      href={`/checkout?productId=${tier.id}`}
-                      className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition mt-auto"
-                    >
-                      Buy Now
-                    </a>
-                  </div>
-                ))}
-              </div>
-              <div className="w-full mt-10 overflow-x-auto">
-                <h5 className="text-lg font-semibold mb-4 text-center">Feature Comparison</h5>
-                <table className="min-w-full border border-gray-200 rounded-lg bg-white text-sm">
-                  <thead>
-                    <tr className="bg-gray-100">
-                      <th className="py-2 px-3 text-left font-bold">Feature</th>
-                      <th className="py-2 px-3 font-bold">Core</th>
-                      <th className="py-2 px-3 font-bold">Pro</th>
-                      <th className="py-2 px-3 font-bold">Enterprise</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {[
-                      { feature: "Basic Charts", core: true, pro: true, ent: true },
-                      { feature: "Single List", core: true, pro: true, ent: true },
-                      { feature: "Multiple Lists", core: false, pro: true, ent: true },
-                      { feature: "Export", core: false, pro: true, ent: true },
-                      { feature: "Drill-through", core: false, pro: true, ent: true },
-                      { feature: "Advanced Branding", core: false, pro: true, ent: true },
-                      { feature: "Logo Integration", core: false, pro: true, ent: true },
-                      { feature: "Custom CSS", core: false, pro: false, ent: true },
-                      { feature: "White-label", core: false, pro: false, ent: true },
-                      { feature: "Source Code", core: false, pro: false, ent: true },
-                      { feature: "Commercial Redistribution", core: false, pro: false, ent: true },
-                      { feature: "Priority Support", core: false, pro: true, ent: true },
-                    ].map((row) => (
-                      <tr key={row.feature} className="border-t">
-                        <td className="py-2 px-3 font-medium text-gray-700">{row.feature}</td>
-                        {[row.core, row.pro, row.ent].map((val, idx) => (
-                          <td key={idx} className="py-2 px-3 text-center">
-                            {val ? (
-                              <span className="inline-block text-green-600" title="Included">
-                                <svg className="w-5 h-5 mx-auto" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
-                              </span>
-                            ) : (
-                              <span className="inline-block text-red-500" title="Not included">
-                                <svg className="w-5 h-5 mx-auto" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
-                              </span>
-                            )}
-                          </td>
-                        ))}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
-      {/* End Ready-Made Solutions Section - HIDDEN FOR DEPLOYMENT */}
+
     </section>
   );
 }
@@ -568,6 +493,58 @@ function Blog() {
   );
 }
 
+// function Testimonials() {
+//   return (
+//     <section className="max-w-6xl mx-auto py-16 px-4">
+//       <h2 className="text-3xl md:text-4xl font-bold mb-8 text-brand-dark text-center">What Our Clients Say</h2>
+//       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+//         <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+//           <div className="flex items-center mb-4">
+//             <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
+//               <span className="text-blue-600 font-bold text-lg">JD</span>
+//             </div>
+//             <div>
+//               <h4 className="font-semibold text-brand-dark">John Doe</h4>
+//               <p className="text-sm text-gray-600">IT Director, TechCorp</p>
+//             </div>
+//           </div>
+//           <p className="text-gray-700 italic">
+//             "AutomateHub Studio transformed our SharePoint workflows. The policy acknowledgement tracker alone saved us hours of manual work every week."
+//           </p>
+//         </div>
+//         <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+//           <div className="flex items-center mb-4">
+//             <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4">
+//               <span className="text-green-600 font-bold text-lg">SJ</span>
+//             </div>
+//             <div>
+//               <h4 className="font-semibold text-brand-dark">Sarah Johnson</h4>
+//               <p className="text-sm text-gray-600">Operations Manager, InnovateCo</p>
+//             </div>
+//           </div>
+//           <p className="text-gray-700 italic">
+//             "The approval workflow automation has streamlined our entire process. We've reduced approval times by 70% and eliminated bottlenecks."
+//           </p>
+//         </div>
+//         <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+//           <div className="flex items-center mb-4">
+//             <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mr-4">
+//               <span className="text-purple-600 font-bold text-lg">MJ</span>
+//             </div>
+//             <div>
+//               <h4 className="font-semibold text-brand-dark">Mike Chen</h4>
+//               <p className="text-sm text-gray-600">CTO, DataFlow Inc</p>
+//             </div>
+//           </div>
+//           <p className="text-gray-700 italic">
+//             "Custom Power Apps integration was exactly what we needed. The team delivered on time and exceeded our expectations."
+//           </p>
+//         </div>
+//       </div>
+//     </section>
+//   );
+// }
+
 function Privacy() {
   // The HTML content from public/PrivacyPolicy.html
   const privacyHtml = `<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"UTF-8\"><title>Privacy Policy — AutomateHub Studio</title><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><style>body { font-family: Arial, sans-serif; margin: 2em; background: #fafbfc; color: #222; } .container { max-width: 800px; margin: auto; background: #fff; padding: 2em; border-radius: 12px; box-shadow: 0 2px 8px #0001; } h1 { color: #205081; font-size: 2.2em; margin-bottom: 0.2em; } h2 { color: #205081; font-size: 1.25em; margin-top: 1.5em; margin-bottom: 0.5em; font-weight: bold; } .section-title { color: #205081; font-size: 1.15em; font-weight: bold; margin-top: 1.5em; margin-bottom: 0.3em; } ul { margin-left: 1.5em; margin-bottom: 1em; } p { margin-bottom: 1em; } a { color: #205081; text-decoration: underline; } .effective-date { font-weight: bold; margin-bottom: 1.5em; } .contact-info { margin-top: 2em; } .contact-info strong { font-weight: bold; }</style></head><body><div class=\"container\"><h1>Privacy Policy</h1><p class=\"effective-date\">Effective Date: <em>July 15, 2025</em></p><p>This Privacy Policy describes how <strong>AutomateHub Studio</strong> (\"we\", \"us\", or \"our\") collects, uses, and protects your personal information when you use our website (e.g., Gumroad/Lemon Squeezy storefront, GitHub Pages), download our templates, contact us, or use our <strong>Policy Acknowledgement Tracker</strong> web part (\"the App\") in your Microsoft 365/SharePoint environment.</p><div class=\"section-title\">1. Information We Collect</div><ul><li><strong>Website/Storefront:</strong> Your name and email address when you voluntarily provide them (e.g., newsletter sign‑ups, support requests).</li><li><strong>Usage Data:</strong> Automated logs (e.g., IP address, browser, usage timestamps) generated by GitHub Pages or our storefront platforms.</li><li><strong>Web Part (App):</strong> The App stores and processes data only within your organization's Microsoft 365/SharePoint tenant. The App may access and display user profile information (such as name and email) as provided by Microsoft 365, solely for the purpose of tracking policy acknowledgements. The App does not collect, transmit, or store any personal data outside your Microsoft 365 environment.</li></ul><div class=\"section-title\">2. How We Use Your Data</div><ul><li>To deliver requested content (e.g., templates, guides).</li><li>To respond to support inquiries.</li><li>To send occasional updates or offers related to our services (with unsubscribe option).</li><li>To improve our products and website functionality.</li><li><strong>Web Part (App):</strong> Data is used only for the purpose of policy tracking and compliance within your organization. The App uses SharePoint lists to store policy information and user acknowledgements. No data is sent to third-party servers or external services.</li></ul><div class=\"section-title\">3. Data Sharing</div><p>We do <strong>not sell or rent</strong> your personal data. We may share data with:</p><ul><li><strong>Platform providers:</strong> GitHub, Gumroad, Lemon Squeezy (for hosting, purchases, licensing).</li><li><strong>Legal requirements:</strong> If required by law or to protect our rights.</li></ul><p><strong>Web Part (App):</strong> All data remains within your Microsoft 365 tenant and is subject to Microsoft's security and compliance standards. We do not have access to your data or your users' data.</p><div class=\"section-title\">4. Third‑Party Services</div><p>We use platforms that may collect limited information (e.g., IP address via GitHub Pages logs). Please refer to their privacy policies for details.</p><div class=\"section-title\">5. Your Rights</div><p>We respect your privacy rights under laws such as the General Data Protection Regulation (GDPR) and the California Consumer Privacy Act (CCPA), where applicable.</p><p>Depending on your location, you may have rights to access, rectify, or delete your personal data, or object to processing. To exercise these rights, please contact us at <a href=\"mailto:automatehubstudio@gmail.com\">automatehubstudio@gmail.com</a>.</p><p><strong>Web Part (App):</strong> You may remove the App at any time from your SharePoint environment and delete any data stored by the App in your SharePoint lists.</p><div class=\"section-title\">6. Cookies</div><p>We do not use cookies on GitHub Pages. Our storefront platforms may use cookies; please refer to their cookies policies.</p><div class=\"section-title\">7. Data Security</div><p>We implement appropriate measures to protect your data during transit and storage. However, no transmission over the Internet or electronic storage is 100% secure.</p><p><strong>Web Part (App):</strong> All data remains within your Microsoft 365 tenant and is protected by Microsoft's security and compliance standards.</p><div class=\"section-title\">8. Children's Privacy</div><p>Our services are not directed at children under 13. We do not knowingly collect personal data from minors.</p><div class=\"section-title\">9. Changes to This Policy</div><p>We may update this policy periodically. The <strong>effective date</strong> will reflect the latest version. We encourage you to review it occasionally.</p><div class=\"section-title\">10. Contact Us</div><div class=\"contact-info\"><p>For questions about Policy, contact:<br><strong>AutomateHub Studio</strong><br><a href=\"mailto:contact@automatehubstudio.com\">automatehubstudio@gmail.com</a><br><a href=\"https://www.automatehubstudio.com\" target=\"_blank\">AutomateHub Studio</a></p></div></div></body></html>`;
@@ -727,6 +704,19 @@ function Navigation() {
                 <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-brand-gold transform scale-x-100 transition-transform duration-200"></div>
               )}
             </Link>
+            {/* <Link 
+              to="/testimonials" 
+              className={`px-4 py-2 rounded-lg font-semibold transition-all duration-200 relative ${
+                isActive('/testimonials') 
+                  ? 'text-brand-gold bg-blue-700/50' 
+                  : 'hover:text-brand-gold hover:bg-blue-700/30'
+              }`}
+            >
+              Testimonials
+              {isActive('/testimonials') && (
+                <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-brand-gold transform scale-x-100 transition-transform duration-200"></div>
+              )}
+            </Link> */}
             <div className="ml-4 pl-4 border-l border-blue-600">
               <Link 
                 to="/contact" 
@@ -801,7 +791,14 @@ function Navigation() {
             >
               Blog
             </Link>
-            {/* <Link to="/testimonials" className={`text-brand-dark hover:text-brand-gold transition-colors duration-200 ${isActive('/testimonials') ? 'text-brand-gold font-semibold' : ''}`}>
+            {/* <Link 
+              to="/testimonials" 
+              className={`block px-4 py-3 font-semibold transition-all duration-200 rounded-lg mx-2 ${
+                isActive('/testimonials') 
+                  ? 'text-brand-gold bg-blue-700/50' 
+                  : 'hover:text-brand-gold hover:bg-blue-700/30'
+              }`}
+            >
               Testimonials
             </Link> */}
             <div className="px-4 pt-2">
@@ -814,12 +811,11 @@ function Navigation() {
             </div>
           </div>
         </div>
-      </div>
-    </nav>
+        </div>
+      </nav>
   );
 }
 
-/*
 // AccordionSection component for collapsible sections
 interface AccordionSectionProps {
   title: string;
@@ -842,7 +838,6 @@ const AccordionSection = ({ title, children, defaultOpen = false }: AccordionSec
     </div>
   );
 };
-*/
 
 function App() {
   return (
@@ -863,9 +858,11 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/blog" element={<Blog />} />
+          {/* <Route path="/testimonials" element={<Testimonials />} /> */}
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/tos" element={<TOS />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/thank-you" element={<ThankYouPage />} />
           <Route path="/products" element={<ProductPage />} />
         </Routes>
       </main>
@@ -978,7 +975,7 @@ function App() {
                     <svg className="w-4 h-4 mr-2 transform group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
-                    Request Demo
+                    Request Consultation
                   </Link>
                 </li>
               </ul>
